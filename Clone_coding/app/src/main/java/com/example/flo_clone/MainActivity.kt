@@ -10,10 +10,15 @@ import com.example.flo_clone.ui.home.HomeFragment
 import com.example.flo_clone.ui.locker.LockerFragment
 import com.example.flo_clone.ui.look.LookFragment
 import com.example.flo_clone.ui.search.SearchFragment
+import com.google.gson.Gson
+import kotlin.jvm.java as java
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private var song:Song=Song()
+    private var gson:Gson= Gson()
 
     private val startForResult =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -31,11 +36,6 @@ class MainActivity : AppCompatActivity() {
 
         initBottomNavigation()
 
-        val song = Song(
-            binding.mainMiniplayerTitleTv.text.toString(),
-            binding.mainMiniplayerSingerTv.text.toString(),
-            0, 60, false
-        )
 
         // main_player_cl 눌렀을 때 SongActivity로 전환 리스너 설정
         binding.mainPlayerCl.setOnClickListener {
@@ -45,6 +45,7 @@ class MainActivity : AppCompatActivity() {
             intent.putExtra("second", song.second)
             intent.putExtra("playTime", song.playTime)
             intent.putExtra("isPlaying", song.isPlaying)
+            intent.putExtra("music",song.music)
             startForResult.launch(intent)
         }
     }
@@ -87,5 +88,24 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
+
+        }
+    private fun setMiniPlayer(song : Song){
+        binding.mainMiniplayerTitleTv.text=song.title
+        binding.mainMiniplayerSingerTv.text=song.singer
+        binding.mainMiniplayerProgressSb.progress=(song.second*100000)/song.playTime
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val sharedPreferences = getSharedPreferences("song",MODE_PRIVATE)
+        val songJson = sharedPreferences.getString("songData",null)
+
+        song = if(songJson == null) {
+            Song("라일락", "아이유(IU)", 0, 60, false, "iu_lilac")
+        }else{
+            gson.fromJson(songJson,Song::class.java)
+        }
+        setMiniPlayer(song)
     }
 }
