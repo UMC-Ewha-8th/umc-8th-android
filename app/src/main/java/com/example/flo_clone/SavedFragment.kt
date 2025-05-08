@@ -21,11 +21,11 @@ class SavedFragment : Fragment() {
         binding = FragmentSavedBinding.inflate(inflater, container, false)
 
         val songList = arrayListOf(
-            Song("LILAC", "아이유", R.drawable.img_album_exp2),
-            Song("Butter", "BTS", R.drawable.img_album_exp),
-            Song("Next Level", "에스파", R.drawable.img_album_exp3),
-            Song("Weekend", "태연", R.drawable.img_album_exp6)
-        )
+            Song("LILAC", "아이유", 0,60,false,"iu_lilac", R.drawable.img_album_exp2,),
+            Song("Butter", "BTS", 0,60,false,"bts_butter",R.drawable.img_album_exp),
+            Song("Next Level", "에스파",0,60,false,"iu_lilac", R.drawable.img_album_exp3),
+            Song("Weekend", "태연",0,60,false,"iu_lilac", R.drawable.img_album_exp6)
+        ) // Song데이터 클래스 순서에 맞게 속성들을 모두 넣어주셔야해요
 
         val adapter = SongRVAdapter(songList)
         binding.savedRecyclerView.adapter = adapter

@@ -24,6 +24,23 @@ class SongRVAdapter(private val songList: ArrayList<Song>) : RecyclerView.Adapte
             binding.itemSongTitleTv.text = song.title
             binding.itemSongSingerTv.text = song.singer
             binding.itemSongCoverImgIv.setImageResource(song.coverImg ?: R.drawable.img_album_exp)
+
+            binding.itemSongPlayBtn.setOnClickListener {
+                song.isPlaying = !song.isPlaying
+                mItemClickListener.onPlaySong(song)
+                notifyItemChanged(adapterPosition)
+            }
+
+            binding.itemSongMoreBtn.setOnClickListener {
+                mItemClickListener.onRemoveSong(adapterPosition)
+
+            }
+
+            if (song.isPlaying) {
+                binding.itemSongPlayBtn.setImageResource(R.drawable.btn_miniplay_pause)
+            } else {
+                binding.itemSongPlayBtn.setImageResource(R.drawable.btn_miniplayer_play)
+            }
         }
     }
 
@@ -36,14 +53,6 @@ class SongRVAdapter(private val songList: ArrayList<Song>) : RecyclerView.Adapte
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val song = songList[position]
         holder.bind(song)
-
-        holder.binding.itemSongPlayBtn.setOnClickListener {
-            mItemClickListener.onPlaySong(song)
-        }
-
-        holder.binding.itemSongMoreBtn.setOnClickListener {
-            mItemClickListener.onRemoveSong(position)
-        }
     }
 
     override fun getItemCount(): Int = songList.size
