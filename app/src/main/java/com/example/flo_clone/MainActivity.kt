@@ -5,6 +5,7 @@ import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -15,8 +16,10 @@ import com.google.gson.Gson
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
     private var song: Song = Song()
     private var gson: Gson = Gson()
+
     private var handler: Handler = Handler(Looper.getMainLooper())
     private lateinit var updateSeekBarRunnable: Runnable
     private var mediaPlayer: MediaPlayer? = null
@@ -32,27 +35,26 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setTheme(R.style.Theme_FLOclone)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        inputDummySongs()
         initBottomNavigation()
 
         // SongActivity로 이동
         binding.mainPlayerCl.setOnClickListener {
-            val intent = Intent(this, SongActivity::class.java).apply {
-                flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                putExtra("title", song.title)
-                putExtra("singer", song.singer)
-                putExtra("second", song.second)
-                putExtra("playTime", song.playTime)
-                putExtra("isPlaying", song.isPlaying)
-                putExtra("music", song.music)
+            val editor=getSharedPreferences("song", MODE_PRIVATE).edit()
+            editor.putInt("songId",song.id)
+            editor.apply()
+
+            val intent=Intent(this,SongActivity::class.java)
+            startActivity(intent)
+
             }
-            startForResult.launch(intent)
+
         }
 
-        initSeekBarUpdater()
     }
 
     private fun initBottomNavigation() {
@@ -156,14 +158,27 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
-        val songJson = sharedPreferences.getString("songData", null)
+//        val sharedPreferences = getSharedPreferences("song", MODE_PRIVATE)
+//        val songJson = sharedPreferences.getString("songData", null)
+//
+//        song = if (songJson == null) {
+//            Song("라일락", "아이유(IU)", 0, 60, false, "iu_lilac")
+//        } else {
+//            gson.fromJson(songJson, Song::class.java)
+//        }
+        val spf=getSharedPreferences("song", MODE_PRIVATE)
+        val songId=spf.getInt("songId",0)
 
-        song = if (songJson == null) {
-            Song("라일락", "아이유(IU)", 0, 60, false, "iu_lilac")
-        } else {
-            gson.fromJson(songJson, Song::class.java)
+        val songDB=SongDatabase.getInstance(this)!!
+
+        song=if(songId==0){
+            songDB.songDao().getSong(1)
+        }else{
+            songDB.songDao().getSong(songId)
         }
+
+        Log.d("song ID",song.id.toString())
+
         setMiniPlayer(song)
     }
 
@@ -178,5 +193,38 @@ class MainActivity : AppCompatActivity() {
         mediaPlayer?.release()
         mediaPlayer = null
     }
+    private fun inputDummySongs(){
+        val songDB=SongDatabase.getInstance(this)
+        val songs= songDB?.songDao()?.getSongs()
 
+        if(songs?.isEmpty() == true) return
+
+        songDB?.songDao()?.insert(
+            Song(
+                "LILAC", "아이유", 0,60,false,"iu_lilac", R.drawable.img_album_exp2,false
+            )
+        )
+        songDB?.songDao()?.insert(
+            Song(
+                "Butter", "BTS", 0,60,false,"bts_butter",R.drawable.img_album_exp,false
+            )
+        )
+        songDB?.songDao()?.insert(
+            Song(
+                "Next Level", "에스파",0,60,false,"iu_lilac", R.drawable.img_album_exp3
+            )
+        )
+        songDB?.songDao()?.insert(
+            Song(
+                "Boy with Luv", "BTS",0,230,false,"iu_lilac",R.drawable.img_album_exp4,false
+            )
+        )
+        songDB?.songDao()?.insert(
+            Song(
+                "BBoom BBoom","모모랜드(MOMOLAND)",0,240,false,"iu_lilac",R.drawable.img_album_exp5,false
+            )
+        )
+        val _songs=songDB?.songDao()?.getSongs()
+        Log.d("DB data",_songs.toString())
+    }
 }

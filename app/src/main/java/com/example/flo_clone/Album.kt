@@ -1,5 +1,7 @@
 package com.example.flo_clone
 
+import java.util.ArrayList
+
 data class Album(
     var title: String? = "",
     var singer: String? = "",
