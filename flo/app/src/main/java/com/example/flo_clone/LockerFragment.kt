@@ -1,48 +1,74 @@
 package com.example.flo_clone
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flo_clone.databinding.FragmentLockerBinding
+import com.google.android.material.tabs.TabLayoutMediator
 
 class LockerFragment : Fragment() {
-    lateinit var binding: FragmentLockerBinding
-    lateinit var songDB:SongDatabase
-    private val tabs = listOf("저장한 곡", "음악파일")
+    private lateinit var binding: FragmentLockerBinding
+    private val tabs = listOf("저장한 곡", "음악파일", "저장앨범")
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentLockerBinding.inflate(inflater, container, false)
 
-        songDB=SongDatabase.getInstance(requireContext())!!
+        binding.lockerContentVp.adapter = LockerViewPagerAdapter(this)
+        TabLayoutMediator(binding.lockerContentTb, binding.lockerContentVp) { tab, position ->
+            tab.text = tabs[position]
+        }.attach()
+
+        binding.lockerLoginTv.setOnClickListener{
+            startActivity(Intent(activity,LoginActivity::class.java))
+        }
+
         return binding.root
     }
 
     override fun onStart() {
         super.onStart()
-        initRecyclerView()
+        initViews()
     }
 
-    private fun initRecyclerView() {
-        // 뷰 바인딩은 fragment_saved.xml을 포함한 layout의 뷰 ID를 기준으로 해야 해
-        val savedRecyclerView = requireView().findViewById<RecyclerView>(R.id.savedRecyclerView)
-        val songRVAdapter = SavedSongRVAdapter()
+    private fun getJwt():Int{
+        val spf = activity?.getSharedPreferences("auth",AppCompatActivity.MODE_PRIVATE)
+        return spf!!.getInt("jwt",0)
+    }
 
-        songRVAdapter.setMyItemClickListener(object : SavedSongRVAdapter.MyItemClickListener{
-            override fun onRemoveSong(songId: Int) {
-                songDB.songDao().updateIsLikeById(false,songId)
+    private fun initViews(){
+        val jwt : Int = getJwt()
+        if(jwt ==0){
+            binding.lockerLoginTv.text="로그인"
+            binding.lockerLoginTv.setOnClickListener{
+                startActivity(Intent(activity,LoginActivity::class.java))
             }
-
-        })
-
-        val songs = songDB.songDao().getLikedSongs(true) as ArrayList<Song>
-        songRVAdapter.addSongs(songs)
+        } else{
+            binding.lockerLoginTv.text="로그아웃"
+            binding.lockerLoginTv.setOnClickListener{
+                //로그아웃 진행
+                logout()
+                startActivity(Intent(activity,MainActivity::class.java))
+            }
+        }
     }
 
+    private fun logout(){
+        val spf = activity?.getSharedPreferences("auth",AppCompatActivity.MODE_PRIVATE)
+        val editor = spf!!.edit()
+        editor.remove("jwt")
+        editor.apply()
+    }
 }
+
+
+
+

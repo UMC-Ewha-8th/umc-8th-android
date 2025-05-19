@@ -133,14 +133,16 @@ class SongActivity : AppCompatActivity() {
         setPlayer(songs[nowPos])
     }
 
-    private fun setLike(isLike:Boolean){
-        songs[nowPos].islike=!isLike
-        songDB.songDao().updateIsLikeById(!isLike,songs[nowPos].id)
+    private fun setLike(isLike: Boolean) {
+        songs[nowPos].islike = !isLike
+        songDB.songDao().updateIsLikeById(!isLike, songs[nowPos].id)
 
-        if(!isLike){
+        if (!isLike) {
             binding.songLikeIv.setImageResource(R.drawable.ic_my_like_on)
-        }else{
+            Toast.makeText(this, "보관함에 추가되었습니다", Toast.LENGTH_SHORT).show()
+        } else {
             binding.songLikeIv.setImageResource(R.drawable.ic_my_like_off)
+            Toast.makeText(this, "보관함에서 제거되었습니다", Toast.LENGTH_SHORT).show()
         }
     }
 

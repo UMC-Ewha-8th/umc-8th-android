@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/saved_album_item_cl"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="10dp"
+    android:paddingStart="20dp"
+    android:paddingEnd="10dp">
+
+    <ImageView
+        android:id="@+id/saved_album_img_iv"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:contentDescription="@string/song_album_iv"
+        android:src="@drawable/img_album_exp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingHorizontal="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/saved_album_img_iv"
+        app:layout_constraintStart_toEndOf="@+id/saved_album_img_iv"
+        app:layout_constraintTop_toTopOf="@+id/saved_album_img_iv">
+
+        <TextView
+            android:id="@+id/saved_album_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/song_title_1"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/saved_album_singer_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/song_singer_1"
+            android:textColor="@color/gray_color" />
+
+        <TextView
+            android:id="@+id/saved_album_info_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/album_info"
+            android:textColor="@color/gray_color" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/saved_album_play_iv"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:contentDescription="@string/home_album_play_iv"
+        android:src="@drawable/nugu_btn_play_32"
+        app:layout_constraintBottom_toBottomOf="@+id/saved_album_img_iv"
+        app:layout_constraintEnd_toStartOf="@+id/saved_album_more_iv"
+        app:layout_constraintTop_toTopOf="@+id/saved_album_img_iv" />
+
+    <ImageView
+        android:id="@+id/saved_album_more_iv"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:contentDescription="@string/album_more_iv"
+        android:src="@drawable/btn_player_more"
+        app:layout_constraintBottom_toBottomOf="@+id/saved_album_img_iv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/saved_album_img_iv" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

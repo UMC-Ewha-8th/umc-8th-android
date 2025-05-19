@@ -1,11 +1,14 @@
+package com.example.flo_clone
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.flo_clone.R
-import com.example.flo_clone.Song
 import com.example.flo_clone.databinding.ItemSongBinding
 
+
 class SongRVAdapter(private val songList: ArrayList<Song>) : RecyclerView.Adapter<SongRVAdapter.ViewHolder>() {
+
+
 
     private lateinit var mItemClickListener: MyItemClickListener
 

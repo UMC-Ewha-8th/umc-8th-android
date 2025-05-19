@@ -9,13 +9,15 @@ import com.example.flo_clone.databinding.ItemSongBinding
 class SavedSongRVAdapter : RecyclerView.Adapter<SavedSongRVAdapter.ViewHolder>() {
 
     private val songs = ArrayList<Song>()
-    interface MyItemClickListener{
-        fun onRemoveSong(songId:Int)
-    }
-    private lateinit var mItemClickListener : MyItemClickListener
 
-    fun setMyItemClickListener(itemClickListener: MyItemClickListener){
-        mItemClickListener=itemClickListener
+    interface MyItemClickListener {
+        fun onRemoveSong(songId: Int)
+    }
+
+    private lateinit var mItemClickListener: MyItemClickListener
+
+    fun setMyItemClickListener(itemClickListener: MyItemClickListener) {
+        mItemClickListener = itemClickListener
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -24,12 +26,23 @@ class SavedSongRVAdapter : RecyclerView.Adapter<SavedSongRVAdapter.ViewHolder>()
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(songs[position])
-        holder.binding.itemSongMoreBtn.setOnClickListener{
-            mItemClickListener.onRemoveSong(songs[position].id)
-            removeSong(position)
+        val song = songs[position]
+        holder.bind(song, position)
+    }
+
+    inner class ViewHolder(val binding: ItemSongBinding) : RecyclerView.ViewHolder(binding.root) {
+        fun bind(song: Song, position: Int) {
+            binding.itemSongTitleTv.text = song.title
+            binding.itemSongSingerTv.text = song.singer
+            binding.itemSongCoverImgIv.setImageResource(song.coverImg ?: R.drawable.img_album_exp)
+
+            binding.itemSongMoreBtn.setOnClickListener {
+                mItemClickListener.onRemoveSong(song.id)  // 이건 DB용
+                removeSong(position)                      // 이건 화면 목록에서 제거
+            }
         }
     }
+
 
     override fun getItemCount(): Int = songs.size
 
@@ -44,15 +57,11 @@ class SavedSongRVAdapter : RecyclerView.Adapter<SavedSongRVAdapter.ViewHolder>()
     fun removeSong(position: Int) {
         if (position in songs.indices) {
             songs.removeAt(position)
-            notifyDataSetChanged()
-        }
-    }
-
-    inner class ViewHolder(val binding: ItemSongBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(song: Song) {
-            binding.itemSongTitleTv.text = song.title
-            binding.itemSongSingerTv.text = song.singer
-            binding.itemSongCoverImgIv.setImageResource(song.coverImg!!)
+            notifyItemRemoved(position)
+            notifyItemRangeChanged(position, songs.size)
         }
     }
 }
+
+
+

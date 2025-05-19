@@ -13,6 +13,7 @@ class HomeFragment : Fragment() {
 
     private lateinit var binding: FragmentHomeBinding
     private val albumDatas = ArrayList<Album>()
+    private lateinit var songDB : SongDatabase
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -28,6 +29,9 @@ class HomeFragment : Fragment() {
             add(Album("BBoom BBoom", "모모랜드 (MOMOLAND)", R.drawable.img_album_exp5))
             add(Album("Weekend", "태연(Tae Yeon)", R.drawable.img_album_exp6))
         }
+
+        songDB = SongDatabase.getInstance(requireContext())!!
+        albumDatas.addAll(songDB.albumDao().getAllAlbums())
 
         val albumRVAdapter = AlbumRVAdapter(albumDatas)
         binding.homeTodayMusicAlbumRv.adapter = albumRVAdapter
