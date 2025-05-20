@@ -38,7 +38,12 @@
             android:textSize="14sp"
             android:textColor="@color/purple_500"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="23dp"/>
+            android:layout_marginTop="23dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="8dp"
+            android:background="?attr/selectableItemBackground" />
+
     </LinearLayout>
 
     <!-- 탭 (저장한 곡 / 음악 파일) -->
