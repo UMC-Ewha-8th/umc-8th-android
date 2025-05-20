@@ -17,7 +17,6 @@ class SignupActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -31,15 +30,20 @@ class SignupActivity : AppCompatActivity() {
                 finish()
             }
         }
+
+        // ✅ 로그 확인용: DB에 있는 모든 유저 출력
+        for (user in SongDatabase.getInstance(this)!!.userDao().getAllUsers()) {
+            Log.d("UserCheck", "ID: ${user.id}, Email: ${user.email}, Password: ${user.password}")
+        }
     }
+
+    // ✅ 이제는 onCreate 밖에 존재하는 함수들
     private fun signup() {
         val email = binding.signupIdEt.text.toString() + "@" + binding.signupEmailDomainTv.text.toString()
         val password = binding.signupPasswordEt.text.toString()
 
         val user = User(email, password)
         val userDB = SongDatabase.getInstance(this)!!
-
-
         userDB.userDao().insert(user)
 
         val allUsers = userDB.userDao().getAllUsers()
@@ -47,22 +51,18 @@ class SignupActivity : AppCompatActivity() {
             Log.d("UserCheck", "ID: ${user.id}, Email: ${user.email}, Password: ${user.password}")
         }
 
-
         Toast.makeText(this, "회원가입 완료!", Toast.LENGTH_SHORT).show()
-        finish()
     }
-
-
-
 
     private fun validateEmail(): Boolean {
         val email = binding.signupIdEt.text.toString()
         val emailDomain = binding.signupEmailDomainTv.text.toString()
 
         if (email.isEmpty()) {
-            binding.signupValidateTv.text = resources.getString(R.string.signup_validate_id_empty)
+            binding.signupValidateTv.text =
+                resources.getString(R.string.signup_validate_id_empty)
             binding.signupValidateTv.visibility = View.VISIBLE
-            Toast.makeText(this,"이메일 형식이 잘못되었습니다",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "이메일 형식이 잘못되었습니다", Toast.LENGTH_SHORT).show()
             return false
         }
 
@@ -91,9 +91,10 @@ class SignupActivity : AppCompatActivity() {
         val passwordCheck = binding.signupPasswordCheckEt.text.toString()
 
         if (password.isEmpty()) {
-            binding.signupValidateTv.text = resources.getString(R.string.signup_validate_pw_empty)
+            binding.signupValidateTv.text =
+                resources.getString(R.string.signup_validate_pw_empty)
             binding.signupValidateTv.visibility = View.VISIBLE
-            Toast.makeText(this,"비밀번호가 일치하지 않습니다",Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "비밀번호가 일치하지 않습니다", Toast.LENGTH_SHORT).show()
             return false
         }
 
@@ -114,6 +115,4 @@ class SignupActivity : AppCompatActivity() {
 
         return true
     }
-
-
 }
