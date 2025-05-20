@@ -95,8 +95,23 @@ class SongActivity : AppCompatActivity() {
             moveSong(-1)
         }
 
-        binding.songLikeIv.setOnClickListener{
-            setLike(songs[nowPos].islike)
+        binding.songLikeIv.setOnClickListener {
+            val currentSong = songs[nowPos]
+
+            val isCurrentlyLiked = currentSong.islike
+            currentSong.islike = !isCurrentlyLiked
+
+            // DB에 업데이트
+            songDB.songDao().updateIsLikeById(!isCurrentlyLiked, currentSong.id)
+
+            // UI 반영
+            if (currentSong.islike) {
+                binding.songLikeIv.setImageResource(R.drawable.ic_my_like_on)
+                Toast.makeText(this, "보관함에 추가됐어요!", Toast.LENGTH_SHORT).show()
+            } else {
+                binding.songLikeIv.setImageResource(R.drawable.ic_my_like_off)
+                Toast.makeText(this, "보관함에서 제거됐어요!", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
