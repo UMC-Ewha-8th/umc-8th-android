@@ -11,23 +11,19 @@ import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // 🔘 텍스트 입력될 때마다 버튼 활성화 조건 검사
         binding.loginPasswordEt.addTextChangedListener { enableLoginButtonIfReady() }
         binding.loginIdEt.addTextChangedListener { enableLoginButtonIfReady() }
         binding.loginEmailDomainTv.addTextChangedListener { enableLoginButtonIfReady() }
 
-        // 회원가입 버튼
         binding.loginSignupTv.setOnClickListener {
             startActivity(Intent(this, SignupActivity::class.java))
         }
 
-        // 로그인 버튼
         binding.loginFinishBtn.setOnClickListener {
             login()
         }
@@ -49,7 +45,6 @@ class LoginActivity : AppCompatActivity() {
                     if (resp != null && resp.isSuccess) {
                         Toast.makeText(this@LoginActivity, "로그인 성공!", Toast.LENGTH_SHORT).show()
 
-                        // JWT(memberId) 저장
                         resp.result?.memberId?.let { token ->
                             saveJwt(token)
                         }
@@ -69,7 +64,6 @@ class LoginActivity : AppCompatActivity() {
                 } else {
                     val errorMsg = response.errorBody()?.string()
                     Log.e("API_ERROR", "서버 응답 실패: ${response.code()}, $errorMsg")
-
                     val parsedMsg = parseErrorMessage(errorMsg)
                     Toast.makeText(this@LoginActivity, parsedMsg, Toast.LENGTH_SHORT).show()
                 }
@@ -81,7 +75,6 @@ class LoginActivity : AppCompatActivity() {
         })
     }
 
-    // 🔥 에러 메시지 파싱 함수 - login() 밖에 작성!
     private fun parseErrorMessage(errorBody: String?): String {
         return try {
             val json = JSONObject(errorBody ?: "")

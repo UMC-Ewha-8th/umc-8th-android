@@ -14,7 +14,6 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class SignupActivity : AppCompatActivity() {
-
     private lateinit var binding: ActivitySignupBinding
     private val emailDomains = arrayOf("naver.com", "gmail.com", "hanmail.net", "nate.com")
     private lateinit var userDB: SongDatabase
@@ -24,7 +23,6 @@ class SignupActivity : AppCompatActivity() {
         binding = ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // DB 초기화
         userDB = SongDatabase.getInstance(this) ?: run {
             Toast.makeText(this, "DB 초기화 실패", Toast.LENGTH_SHORT).show()
             finish()
@@ -40,7 +38,6 @@ class SignupActivity : AppCompatActivity() {
             }
         }
 
-        // DB 유저 로그 확인 (안전하게 Thread 처리)
         Thread {
             try {
                 val users = userDB.userDao().getAllUsers()
@@ -70,7 +67,6 @@ class SignupActivity : AppCompatActivity() {
                     if (resp != null && resp.isSuccess) {
                         Toast.makeText(this@SignupActivity, "회원가입 성공!", Toast.LENGTH_SHORT).show()
 
-                        // DB 저장
                         Thread {
                             try {
                                 userDB.userDao().insert(User(email, password, name))
@@ -79,14 +75,12 @@ class SignupActivity : AppCompatActivity() {
                             }
                         }.start()
 
-                        // 로그인 화면 이동
                         val intent = Intent(this@SignupActivity, LoginActivity::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
                         startActivity(intent)
                         finish()
 
                     } else if (resp != null) {
-                        // 서버 코드로 메시지 표시
                         val msg = when (resp.code) {
                             "AUTH_015" -> "이미 존재하는 유저입니다."
                             else -> "회원가입에 실패했습니다."
@@ -98,7 +92,6 @@ class SignupActivity : AppCompatActivity() {
                         Toast.makeText(this@SignupActivity, "회원가입에 실패했습니다.", Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    // 서버 오류일 때: JSON 메시지 파싱
                     val errorMsg = response.errorBody()?.string()
                     Log.e("API_ERROR", "서버 응답 실패: ${response.code()}, $errorMsg")
                     val parsedMsg = parseErrorMessage(errorMsg)
@@ -114,7 +107,6 @@ class SignupActivity : AppCompatActivity() {
         })
     }
 
-    // 서버 에러 JSON 메시지 파싱 함수
     private fun parseErrorMessage(errorBody: String?): String {
         return try {
             val json = JSONObject(errorBody ?: "")
