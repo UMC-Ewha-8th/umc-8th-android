@@ -100,4 +100,26 @@
     <string name="locker_title_tv">보관함</string>
     <string name="saved_no_music_tv">저장한 곡이 없습니다.</string>
 
+
+    <string name="signup">회원가입</string>
+    <string name="signup_finish">가입완료</string>
+    <string name="signup_id_hint">아이디(이메일)</string>
+    <string name="signup_name_et">이름</string>
+    <string name="signup_email_domain_hint">직접입력</string>
+    <string name="signup_at">\@</string>
+    <string name="signup_pw_hint">비밀번호</string>
+    <string name="signup_pw_check_hint">비밀번호 확인</string>
+    <string name="signup_validate_pw">비밀번호가 일치하지 않습니다.</string>
+    <string name="signup_validate_id_empty">아이디를 입력해주세요.</string>
+    <string name="signup_validate_pw_empty">비밀번호를 입력해주세요.</string>
+    <string name="signup_validate_pw_check_empty">비밀번호 확인을 입력해주세요.</string>
+    <string name="signup_validate_email_empty">이메일을 입력해주세요.</string>
+    <string name="signup_validate_email">올바른 이메일 형식으로 입력해주세요.</string>
+    <string name="signup_validate_email_exist">이미 가입된 이메일 주소입니다.</string>
+
+    <string name="login_finish">로그인</string>
+    <string name="login_find_id">아이디 찾기</string>
+    <string name="line_divider">|</string>
+    <string name="login_find_pw">비밀번호 찾기</string>
+    <string name="login_signup">회원가입</string>
 </resources>

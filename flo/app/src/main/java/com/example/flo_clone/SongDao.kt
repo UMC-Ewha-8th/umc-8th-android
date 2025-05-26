@@ -1,31 +1,23 @@
 package com.example.flo_clone
 
+import androidx.room.*
 
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
-import androidx.room.Update
-
-@androidx.room.Dao
+@Dao
 interface SongDao {
+
     @Insert
-    fun insert(song:Song)
-
-    @Update
-    fun update(song:Song)
-
-    @Delete
-    fun delete(song:Song)
+    fun insert(song: Song)
 
     @Query("SELECT * FROM SongTable")
-    fun getSongs():List<Song>
+    fun getSongs(): List<Song>
 
-    @Query("SELECT * FROM SongTable WHERE id=:id")
-    fun getSong(id:Int):Song
+    @Query("SELECT * FROM SongTable WHERE id = :id")
+    fun getSong(id: Int): Song
 
-    @Query("UPDATE SongTable SET islike=:isLike WHERE id=:id")
-    fun updateIsLikeById(isLike:Boolean,id:Int)
+    @Query("UPDATE SongTable SET isLike = :isLike WHERE id = :id")
+    fun updateIsLikeById(id: Int, isLike: Int)
 
-    @Query("SELECT * FROM SongTable WHERE islike=:isLike")
-    fun getLikedSongs(isLike:Boolean):List<Song>
+    @Query("SELECT * FROM SongTable WHERE isLike = :isLike")
+    fun getLikedSongs(isLike: Int): List<Song>
 }
+

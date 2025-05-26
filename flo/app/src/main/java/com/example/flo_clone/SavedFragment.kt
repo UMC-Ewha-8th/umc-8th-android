@@ -1,6 +1,5 @@
 package com.example.flo_clone
 
-import SongRVAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,38 +9,37 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.flo_clone.databinding.FragmentSavedBinding
 
 class SavedFragment : Fragment() {
-
     lateinit var binding: FragmentSavedBinding
-
+    lateinit var songDB: SongDatabase
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View {
         binding = FragmentSavedBinding.inflate(inflater, container, false)
-        val songList = arrayListOf(
-            Song("LILAC", "아이유", 0,60,false,"iu_lilac", R.drawable.img_album_exp2,),
-            Song("Butter", "BTS", 0,60,false,"bts_butter",R.drawable.img_album_exp),
-            Song("Next Level", "에스파",0,60,false,"iu_lilac", R.drawable.img_album_exp3),
-            Song("Weekend", "태연",0,60,false,"iu_lilac", R.drawable.img_album_exp6)
-        )
+        songDB = SongDatabase.getInstance(requireContext())!!
+        return binding.root
+    }
 
-        val adapter = SongRVAdapter(songList)
-        binding.savedRecyclerView.adapter = adapter
-        binding.savedRecyclerView.layoutManager = LinearLayoutManager(context)
+    override fun onStart() {
+        super.onStart()
+        loadLikedSongs()
+    }
 
-        adapter.setMyItemClickListener(object : SongRVAdapter.MyItemClickListener {
-            override fun onPlaySong(song: Song) {
-                (activity as MainActivity).setMiniPlayer(song)
-            }
+    private fun loadLikedSongs() {
+        val songs = songDB.songDao().getLikedSongs(1) as ArrayList<Song> // 1 = true
+        val adapter = SavedSongRVAdapter()
+        adapter.addSongs(songs)
 
-            override fun onRemoveSong(position: Int) {
-                adapter.removeItem(position)
+        adapter.setMyItemClickListener(object : SavedSongRVAdapter.MyItemClickListener {
+            override fun onRemoveSong(songId: Int) {
+                songDB.songDao().updateIsLikeById(songId, 0) // 0 = false
+                loadLikedSongs()
             }
         })
 
-        return binding.root
+        binding.savedRecyclerView.adapter = adapter
+        binding.savedRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
+
 
 }
