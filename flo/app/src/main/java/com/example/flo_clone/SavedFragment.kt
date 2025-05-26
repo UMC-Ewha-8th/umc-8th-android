@@ -26,18 +26,20 @@ class SavedFragment : Fragment() {
     }
 
     private fun loadLikedSongs() {
-        val songs = songDB.songDao().getLikedSongs(true) as ArrayList<Song>
+        val songs = songDB.songDao().getLikedSongs(1) as ArrayList<Song> // 1 = true
         val adapter = SavedSongRVAdapter()
         adapter.addSongs(songs)
 
         adapter.setMyItemClickListener(object : SavedSongRVAdapter.MyItemClickListener {
             override fun onRemoveSong(songId: Int) {
-                songDB.songDao().updateIsLikeById(false, songId)
+                songDB.songDao().updateIsLikeById(songId, 0) // 0 = false
                 loadLikedSongs()
             }
         })
 
         binding.savedRecyclerView.adapter = adapter
-        binding.savedRecyclerView.layoutManager = LinearLayoutManager(requireContext()) // ✅ 꼭 필요!
+        binding.savedRecyclerView.layoutManager = LinearLayoutManager(requireContext())
     }
+
+
 }

@@ -49,15 +49,16 @@
     <!-- 탭 (저장한 곡 / 음악 파일) -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/locker_content_tb"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:tabGravity="start"
         app:layout_constraintTop_toBottomOf="@id/locker_header_layout"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:tabIndicatorColor="@color/select_color"
         app:tabRippleColor="@color/transparent"
         app:tabIndicatorFullWidth="false"
-        app:tabSelectedTextColor="@color/select_color" />
+        app:tabSelectedTextColor="@color/select_color"/>
+
 
     <!-- ViewPager -->
     <androidx.viewpager2.widget.ViewPager2

@@ -5,10 +5,11 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Song::class, User::class], version=2)  // ← 반드시 User 포함
+@Database(entities = [Song::class, User::class, Album::class], version = 4)
 abstract class SongDatabase : RoomDatabase() {
     abstract fun songDao(): SongDao
-    abstract fun userDao(): UserDao  // ✅ 이 줄 추가!
+    abstract fun userDao(): UserDao
+    abstract fun albumDao(): AlbumDao
 
     companion object {
         private var instance: SongDatabase? = null
@@ -21,8 +22,8 @@ abstract class SongDatabase : RoomDatabase() {
                     SongDatabase::class.java,
                     "song-database"
                 )
-                    .fallbackToDestructiveMigration() // 버전 변경 시 초기화 방지
-                    .allowMainThreadQueries()
+                    .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries() // 개발 단계에서만 허용 (나중에 제거)
                     .build()
             }
             return instance!!

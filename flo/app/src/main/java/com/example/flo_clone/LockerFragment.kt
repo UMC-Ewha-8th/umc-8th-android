@@ -30,6 +30,7 @@ class LockerFragment : Fragment() {
             tab.text = when (position) {
                 0 -> "저장한 곡"
                 1 -> "음악파일"
+                2 -> "저장앨범"
                 else -> ""
             }
         }.attach()
@@ -42,7 +43,7 @@ class LockerFragment : Fragment() {
     }
 
     private fun updateLoginText() {
-        val spf = requireContext().getSharedPreferences("user", AppCompatActivity.MODE_PRIVATE)
+        val spf = requireContext().getSharedPreferences("auth", AppCompatActivity.MODE_PRIVATE)
         val isLogin = spf.getBoolean("isLogin", false)
 
         binding.loginTv.text = if (isLogin) "로그아웃" else "로그인"
@@ -51,17 +52,17 @@ class LockerFragment : Fragment() {
             if (isLogin) {
                 // 로그아웃 처리
                 val editor = spf.edit()
-                editor.remove("isLogin")
+                editor.clear() // 저장된 모든 데이터 삭제 (isLogin, email, memberId 등)
                 editor.apply()
 
                 Toast.makeText(requireContext(), "로그아웃 되었습니다", Toast.LENGTH_SHORT).show()
-                updateLoginText() // 다시 로그인 상태로 표시 변경
+                updateLoginText()
             } else {
-                // 로그인 화면으로 이동
                 val intent = Intent(requireContext(), LoginActivity::class.java)
                 startActivity(intent)
             }
         }
     }
+
 
 }

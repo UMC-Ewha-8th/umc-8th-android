@@ -1,0 +1,17 @@
+<resources>
+    <style name="CategoryChip" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textColor">#000000</item>
+        <item name="cornerRadius">50dp</item>
+        <item name="strokeColor">@color/light_gray</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="backgroundTint">@drawable/category_chip_selector</item>
+    </style>
+
+</resources>

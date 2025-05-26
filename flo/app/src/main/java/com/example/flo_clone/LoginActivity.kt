@@ -2,13 +2,12 @@ package com.example.flo_clone
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.example.flo_clone.databinding.ActivityLoginBinding
+import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -34,31 +33,69 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    // 🔐 로그인 로직
     private fun login() {
-        val inputEmail = binding.loginIdEt.text.toString() + "@" + binding.loginEmailDomainTv.text.toString()
-        val inputPassword = binding.loginPasswordEt.text.toString()
+        val email = binding.loginIdEt.text.toString() + "@" + binding.loginEmailDomainTv.text.toString()
+        val password = binding.loginPasswordEt.text.toString()
 
-        val userDB = SongDatabase.getInstance(this)  // 또는 UserDatabase.getInstance(this)
-        val user = userDB!!.userDao().getUserByEmail(inputEmail)
+        val authService = getRetrofit().create(AuthRetrofitInterface::class.java)
+        val request = LoginRequest(email = email, password = password)
 
-        if (user != null && user.password == inputPassword) {
-            // ✅ 로그인 성공 처리
-            val spf = getSharedPreferences("user", MODE_PRIVATE)
-            val editor = spf.edit()
-            editor.putBoolean("isLogin", true)
-            editor.putString("email", inputEmail)
-            editor.apply()
+        Log.d("LOGIN_REQUEST", "email=$email, password=$password")
 
-            Toast.makeText(this, "로그인 성공!", Toast.LENGTH_SHORT).show()
-            startMainActivity()
-        } else {
-            Toast.makeText(this, "회원 정보가 존재하지 않습니다.", Toast.LENGTH_SHORT).show()
+        authService.login(request).enqueue(object : retrofit2.Callback<AuthResponse> {
+            override fun onResponse(call: retrofit2.Call<AuthResponse>, response: retrofit2.Response<AuthResponse>) {
+                if (response.isSuccessful) {
+                    val resp = response.body()
+                    if (resp != null && resp.isSuccess) {
+                        Toast.makeText(this@LoginActivity, "로그인 성공!", Toast.LENGTH_SHORT).show()
+
+                        // JWT(memberId) 저장
+                        resp.result?.memberId?.let { token ->
+                            saveJwt(token)
+                        }
+
+                        startMainActivity()
+                    } else if (resp != null) {
+                        val msg = when (resp.code) {
+                            "AUTH_014" -> "존재하지 않는 계정입니다. 회원가입을 진행해주세요."
+                            "AUTH_008" -> "비밀번호를 잘못 입력했습니다."
+                            "AUTH_009", "AUTH_010" -> "인증에 실패했습니다."
+                            else -> "로그인에 실패했습니다."
+                        }
+                        Toast.makeText(this@LoginActivity, msg, Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this@LoginActivity, "로그인에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    val errorMsg = response.errorBody()?.string()
+                    Log.e("API_ERROR", "서버 응답 실패: ${response.code()}, $errorMsg")
+
+                    val parsedMsg = parseErrorMessage(errorMsg)
+                    Toast.makeText(this@LoginActivity, parsedMsg, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: retrofit2.Call<AuthResponse>, t: Throwable) {
+                Toast.makeText(this@LoginActivity, "통신 실패: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    // 🔥 에러 메시지 파싱 함수 - login() 밖에 작성!
+    private fun parseErrorMessage(errorBody: String?): String {
+        return try {
+            val json = JSONObject(errorBody ?: "")
+            when (json.getString("code")) {
+                "AUTH_014" -> "존재하지 않는 계정입니다. 회원가입을 진행해주세요."
+                "AUTH_008" -> "비밀번호를 잘못 입력했습니다."
+                "AUTH_009", "AUTH_010" -> "인증에 실패했습니다."
+                else -> json.getString("message")
+            }
+        } catch (e: Exception) {
+            "서버 오류 발생"
         }
     }
 
-
-    // ✅ 모든 입력이 채워졌는지 확인 후 버튼 활성화
     private fun enableLoginButtonIfReady() {
         val email = binding.loginIdEt.text.toString()
         val domain = binding.loginEmailDomainTv.text.toString()
@@ -67,15 +104,16 @@ class LoginActivity : AppCompatActivity() {
         binding.loginFinishBtn.isEnabled = email.isNotEmpty() && domain.isNotEmpty() && password.isNotEmpty()
     }
 
-    private fun saveJwt(jwt: Int) {
+    private fun saveJwt(memberId: Int) {
         val spf = getSharedPreferences("auth", MODE_PRIVATE)
         val editor = spf.edit()
-        editor.putInt("jwt", jwt)
+        editor.putBoolean("isLogin", true)
         editor.apply()
     }
 
     private fun startMainActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
+        finish()
     }
 }
