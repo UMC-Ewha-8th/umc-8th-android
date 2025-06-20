@@ -13,5 +13,10 @@
         <item name="android:paddingRight">20dp</item>
         <item name="backgroundTint">@drawable/category_chip_selector</item>
     </style>
+    <style name="TabTextStyleSmall" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">13sp</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
 
 </resources>

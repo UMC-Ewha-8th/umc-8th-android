@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LockerFragment">
+    tools:context=".ui.main.locker.LockerFragment">
 
     <!-- 보관함 + 로그인 텍스트를 수평 정렬 -->
     <LinearLayout
@@ -46,20 +46,51 @@
 
     </LinearLayout>
 
+
+
     <!-- 탭 (저장한 곡 / 음악 파일) -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/locker_content_tb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:tabGravity="start"
-        app:layout_constraintTop_toBottomOf="@id/locker_header_layout"
+        app:layout_constraintTop_toBottomOf="@id/userInfoContainer"
         app:layout_constraintStart_toStartOf="parent"
         app:tabIndicatorColor="@color/select_color"
         app:tabRippleColor="@color/transparent"
         app:tabIndicatorFullWidth="false"
         app:tabSelectedTextColor="@color/select_color"/>
 
+    <LinearLayout
+        android:id="@+id/userInfoContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@id/locker_header_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
+
+    <ImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            android:layout_marginEnd="12dp"
+           />
+
+        <TextView
+            android:id="@+id/nicknameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="닉네임"
+            android:textSize="16sp"
+            android:visibility="gone"
+            android:textStyle="bold" />
+    </LinearLayout>
     <!-- ViewPager -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/locker_content_vp"

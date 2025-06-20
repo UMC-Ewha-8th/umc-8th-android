@@ -14,8 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FLOclone"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="47ef59742e4eb6c01ffcc461ebd97546" />
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
@@ -26,16 +30,31 @@
         </activity>
 
         <activity
-            android:name=".SongActivity"
+            android:name=".ui.song.SongActivity"
             android:exported="true" />
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".ui.signin.LoginActivity"
             android:exported="true"/>
 
         <activity
-            android:name=".SignupActivity"
+            android:name=".ui.signup.SignupActivity"
             android:exported="true"/>
+        <activity
+            android:name="com.kakao.sdk.auth.AuthCodeHandlerActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <!-- Redirect URI: "kakao${NATIVE_APP_KEY}://oauth" -->
+                <data
+                    android:host="oauth"
+                    android:scheme="kakao47ef59742e4eb6c01ffcc461ebd97546"
+                    />
+            </intent-filter>
+        </activity>
 
 
     </application>
