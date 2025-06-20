@@ -12,10 +12,12 @@
         android:id="@+id/saved_tab_tb"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginBottom="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:tabIndicatorColor="@color/select_color"
         app:tabSelectedTextColor="@color/select_color"
+        app:tabTextAppearance="@style/TabTextStyleSmall"
         app:tabIndicatorFullWidth="false"
         app:tabRippleColor="@android:color/transparent"
         tools:ignore="MissingConstraints" />

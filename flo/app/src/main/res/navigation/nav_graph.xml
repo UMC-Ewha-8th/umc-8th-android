@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_home">
+
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.flo_clone.ui.main.home.HomeFragment"
+        android:label="홈"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_look"
+        android:name="com.example.flo_clone.ui.main.look.LookFragment"
+        android:label="둘러보기"
+        tools:layout="@layout/fragment_look" />
+
+    <fragment
+        android:id="@+id/navigation_search"
+        android:name="com.example.flo_clone.ui.main.search.SearchFragment"
+        android:label="검색"
+        tools:layout="@layout/fragment_search" />
+
+    <fragment
+        android:id="@+id/navigation_locker"
+        android:name="com.example.flo_clone.ui.main.locker.LockerFragment"
+        android:label="보관함"
+        tools:layout="@layout/fragment_locker" />
+
+</navigation>

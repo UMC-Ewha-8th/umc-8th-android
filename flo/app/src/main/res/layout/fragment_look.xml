@@ -1,22 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LookFragment">
+    tools:context=".ui.main.look.LookFragment"
+    android:background="@android:color/white">
 
-    <TextView
-        android:id="@+id/text_look"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- 상단 제목 -->
+        <TextView
+            android:id="@+id/look_title_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="둘러보기"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:paddingBottom="12dp" />
+
+        <!-- 카테고리 선택 버튼 -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/categoryChart"
+                    style="@style/CategoryChip"
+                    android:text="차트" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/categoryVideo"
+                    style="@style/CategoryChip"
+                    android:text="영상" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/categoryGenre"
+                    style="@style/CategoryChip"
+                    android:text="장르" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/categorySituation"
+                    style="@style/CategoryChip"
+                    android:text="상황" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/categoryMood"
+                    style="@style/CategoryChip"
+                    android:text="분위기" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/categoryAudio"
+                    style="@style/CategoryChip"
+                    android:text="오디오" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- 차트 카드 뷰 -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="@color/light_gray"
+            android:layout_marginBottom="16dp"
+            android:padding="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <!-- 상단 설명 + 전체듣기 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="FLO 차트  19시 기준"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="전체듣기 >"
+                        android:textSize="14sp"
+                        android:textColor="@android:color/darker_gray" />
+                </LinearLayout>
+
+                <!-- 부가 설명 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="최근 24시간 집계, FLO 최고 인기곡 채트!"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="12dp" />
+
+                <!-- 리스트 -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/look_chart_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
